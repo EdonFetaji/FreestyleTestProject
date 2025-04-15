@@ -13,7 +13,7 @@ node {
     }
 
     stage('Push Images') {
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-creds') {
+        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
             frontend.push(imageTag)
             frontend.push(latestTag)
             backend.push(imageTag)
