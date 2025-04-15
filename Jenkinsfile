@@ -12,12 +12,17 @@ node {
         backend  = docker.build("edon505/freestyle-project-backend", "./backend")
     }
 
-    stage('Push Images') {
-        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-            frontend.push(imageTag)
-            frontend.push(latestTag)
-            backend.push(imageTag)
-            backend.push(latestTag)
+    stage('Push Images (only on dev)') {
+        if (env.BRANCH_NAME == 'dev') {
+            docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                frontend.push(imageTag)
+                frontend.push(latestTag)
+                backend.push(imageTag)
+                backend.push(latestTag)
+            }
+            echo "Docker images pushed for branch: ${env.BRANCH_NAME}"
+        } else {
+            echo "Skipping Docker push: branch is ${env.BRANCH_NAME}"
         }
     }
 }
